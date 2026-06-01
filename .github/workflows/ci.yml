@@ -1,0 +1,32 @@
+name: Functional Test CI
+
+on:
+  push:
+    branches: [ main, master, dev ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Verify file structure
+      run: |
+        echo "Checking project structure..."
+        ls -la test-cases/ || echo "test-cases/ not found"
+        ls -la bug-reports/ || echo "bug-reports/ not found"
+        ls -la reports/ || echo "reports/ not found"
+        echo "Functional test artifacts are ready for review."
+
+    - name: Upload test artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: functional-test-artifacts
+        path: |
+          test-cases/
+          bug-reports/
+          reports/
